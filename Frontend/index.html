@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Exam Score Predictor</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background-color: #f4f4f4;
+            padding: 40px;
+        }
+
+        .container {
+            width: 400px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: green;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Exam Score Predictor</h2>
+
+        <input type="number" id="study" placeholder="Study Hours Per Day">
+
+        <input type="number" id="attendance" placeholder="Attendance Percentage">
+
+        <input type="number" id="sleep" placeholder="Sleep Hours">
+
+        <input type="number" id="mental" placeholder="Mental Health Rating">
+
+        <button onclick="predictScore()">Predict</button>
+
+        <div id="result"></div>
+
+    </div>
+
+    <script>
+
+        async function predictScore() {
+
+            try {
+
+                let study = document.getElementById("study").value;
+
+                let attendance = document.getElementById("attendance").value;
+
+                let sleep = document.getElementById("sleep").value;
+
+                let mental = document.getElementById("mental").value;
+
+                let url =
+`http://127.0.0.1:8000/predict?study_hours_per_day=${study}&attendance_percentage=${attendance}&sleep_hours=${sleep}&mental_health_rating=${mental}`;
+
+                let response = await fetch(url);
+
+                let data = await response.json();
+
+                document.getElementById("result").innerHTML =
+                    "Predicted Exam Score: " + data.predicted_exam_score;
+
+            }
+
+            catch(error) {
+
+                console.log(error);
+
+                document.getElementById("result").innerHTML =
+                    "Error connecting backend";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
