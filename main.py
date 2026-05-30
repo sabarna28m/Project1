@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
-import pickle
+import joblib
 
 # Load trained model
-model = pickle.load(open("Models/model.pkl", "rb"))
+model = joblib.load(open("Models/model.pkl", "rb"))
 
 app = FastAPI()
 
