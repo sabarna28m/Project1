@@ -5,7 +5,7 @@ from sklearn.metrics import mean_absolute_error
 import joblib
 
 # Load dataset
-df = pd.read_csv("../Dataset/Data2.csv")
+df = pd.read_csv("Dataset/Data2.csv")
 
 # Show first rows
 print(df.head())
