@@ -1,116 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Exam Score Predictor</title>
+<title>TwinMind AI</title>
 
-    <style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        body {
-            font-family: Arial;
-            background-color: #f4f4f4;
-            padding: 40px;
-        }
+<style>
 
-        .container {
-            width: 400px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
 
-        h2 {
-            text-align: center;
-        }
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #2563eb
+    );
+    padding:20px;
+}
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-        }
+.container{
+    width:100%;
+    max-width:900px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:25px;
+    padding:40px;
+    color:white;
+    box-shadow:0 10px 40px rgba(0,0,0,0.3);
+}
 
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            background-color: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
 
-        #result {
-            margin-top: 20px;
-            font-size: 20px;
-            color: green;
-            text-align: center;
-        }
+.header h1{
+    font-size:2.5rem;
+    font-weight:700;
+}
 
-    </style>
+.header p{
+    color:#d1d5db;
+    margin-top:10px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+
+label{
+    margin-bottom:8px;
+    font-weight:500;
+}
+
+input{
+    padding:14px;
+    border:none;
+    outline:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.12);
+    color:white;
+    font-size:15px;
+}
+
+input::placeholder{
+    color:#d1d5db;
+}
+
+.predict-btn{
+    width:100%;
+    margin-top:30px;
+    padding:15px;
+    border:none;
+    border-radius:15px;
+    background:linear-gradient(
+        90deg,
+        #06b6d4,
+        #2563eb
+    );
+    color:white;
+    font-size:18px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.predict-btn:hover{
+    transform:translateY(-3px);
+}
+
+.result-card{
+    margin-top:30px;
+    background:rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:25px;
+    text-align:center;
+}
+
+.result-card h2{
+    margin-bottom:10px;
+}
+
+.score{
+    font-size:3rem;
+    font-weight:bold;
+    color:#22c55e;
+}
+
+@media(max-width:700px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:2rem;
+    }
+
+}
+
+</style>
 
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h2>Exam Score Predictor</h2>
+    <div class="header">
+        <h1>🧠 TwinMind AI</h1>
+        <p>Digital Twin of Human Learning</p>
+    </div>
 
-        <input type="number" id="study" placeholder="Study Hours Per Day">
+    <div class="form-grid">
 
-        <input type="number" id="attendance" placeholder="Attendance Percentage">
+        <div class="input-group">
+            <label>Study Hours / Day</label>
+            <input type="number" id="study" placeholder="Example: 5">
+        </div>
 
-        <input type="number" id="sleep" placeholder="Sleep Hours">
+        <div class="input-group">
+            <label>Attendance %</label>
+            <input type="number" id="attendance" placeholder="Example: 85">
+        </div>
 
-        <input type="number" id="mental" placeholder="Mental Health Rating">
+        <div class="input-group">
+            <label>Sleep Hours</label>
+            <input type="number" id="sleep" placeholder="Example: 7">
+        </div>
 
-        <button onclick="predictScore()">Predict</button>
-
-        <div id="result"></div>
+        <div class="input-group">
+            <label>Mental Health Rating (1-10)</label>
+            <input type="number" id="mental" placeholder="Example: 8">
+        </div>
 
     </div>
 
-    <script>
+    <button class="predict-btn" onclick="predictScore()">
+        Predict Performance
+    </button>
 
-        async function predictScore() {
+    <div class="result-card">
 
-            try {
+        <h2>Predicted Exam Score</h2>
 
-                let study = document.getElementById("study").value;
+        <div class="score" id="result">
+            --
+        </div>
 
-                let attendance = document.getElementById("attendance").value;
+    </div>
 
-                let sleep = document.getElementById("sleep").value;
+</div>
 
-                let mental = document.getElementById("mental").value;
+<script>
 
-                let url =
-`http://127.0.0.1:8000/predict?study_hours_per_day=${study}&attendance_percentage=${attendance}&sleep_hours=${sleep}&mental_health_rating=${mental}`;
+async function predictScore(){
 
-                let response = await fetch(url);
+    try{
 
-                let data = await response.json();
+        let study=document.getElementById("study").value;
+        let attendance=document.getElementById("attendance").value;
+        let sleep=document.getElementById("sleep").value;
+        let mental=document.getElementById("mental").value;
 
-                document.getElementById("result").innerHTML =
-                    "Predicted Exam Score: " + data.predicted_exam_score;
+        let url = `http://127.0.0.1:8000/predict?study_hours_per_day=${study}&attendance_percentage=${attendance}&sleep_hours=${sleep}&mental_health_rating=${mental}`;
 
-            }
+        let response=await fetch(url);
 
-            catch(error) {
+        let data=await response.json();
 
-                console.log(error);
+        document.getElementById("result").innerHTML=
+        data.predicted_exam_score;
 
-                document.getElementById("result").innerHTML =
-                    "Error connecting backend";
+    }
 
-            }
+    catch(error){
 
-        }
+        document.getElementById("result").innerHTML=
+        "Error";
 
-    </script>
+    }
+
+}
+
+</script>
 
 </body>
-
 </html>
